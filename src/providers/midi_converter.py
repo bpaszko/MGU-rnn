@@ -83,6 +83,6 @@ class MIDIConverter:
         midi_files = []
         for root, dirs, files in os.walk(base_dir):
             for file in files:
-                if file.endswith('.midi'):
+                if file.endswith('.midi') or file.endswith('.mid'):
                     midi_files.append(os.path.join(root, file))
         return np.random.choice(midi_files, size=int(frac*len(midi_files)), replace=False)
