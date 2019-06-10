@@ -56,7 +56,7 @@ if __name__ == '__main__':
     #################
 
 
-    model_comb = f'{rnn_type.lower()}3_{embed_size}_{seq_len}_sgd_{dataset}'
+    model_comb = f'{rnn_type.lower()}3_{embed_size}_{seq_len}_{dataset}'
     converter = MIDIConverter(dataset_path, frac=1.0, fs=fs)
     provider = MIDIDataset(converter, nn_batch_size=64, song_batch_size=8, seq_len=seq_len)
 
@@ -65,10 +65,10 @@ if __name__ == '__main__':
     model = MusicRNN(embedding_dim=embed_size, hidden_dim=256, unique_notes=provider.unique_notes(), seq_len=seq_len, rnn=rnn_type)
     model = model.to(device)
     loss = nn.NLLLoss()
-    optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
-    scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=300000)
-    # optimizer = optim.Adam(model.parameters(), lr=0.001)
-    losses = train(model, provider, optimizer, loss, 900000, device, model_comb, scheduler)
+    # optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.9, weight_decay=5e-4)
+    # scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=300000)
+    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    losses = train(model, provider, optimizer, loss, 200000, device, model_comb) #, scheduler)
     
     torch.save(model.state_dict(), f'../models/{model_comb}/model.pb')
 
